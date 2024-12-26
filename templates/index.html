@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordPress Theme Tracker</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>WordPress Theme & Plugin Tracker</h1>
+        <form method="post" id="tracker-form">
+            <input type="url" name="url" placeholder="Enter WordPress website URL" required>
+            <button type="submit">Track</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script>
+        const form = document.getElementById('tracker-form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const response = await fetch('/', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h2>Results</h2>
+                <p><strong>Theme:</strong> ${result.theme || 'Not detected'}</p>
+                <p><strong>Plugins:</strong></p>
+                <ul>${result.plugins ? result.plugins.map(p => `<li>${p}</li>`).join('') : 'None detected'}</ul>
+            `;
+        });
+    </script>
+</body>
+</html>
